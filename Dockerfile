@@ -1,8 +1,7 @@
 FROM golang:1.14 as builder
 WORKDIR /src
 # COPY --from=tonistiigi/xx:golang / /
-RUN apk add --no-cache make git &&\
-    git clone https://github.com/Dreamacro/clash.git &&\
+RUN git clone https://github.com/Dreamacro/clash.git &&\
     cd ./clash &&\
     go mod download &&\
     make docker &&\
