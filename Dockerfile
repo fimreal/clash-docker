@@ -1,11 +1,10 @@
 FROM golang:1.14 as builder
 WORKDIR /src
-# COPY --from=tonistiigi/xx:golang / /
 RUN git clone https://github.com/Dreamacro/clash.git &&\
     cd ./clash &&\
     go mod download &&\
-    make docker &&\
-    mv ./bin/clash-docker /clash
+    make docker
+  # mv ./bin/clash-docker /clash
 
 FROM node:14 as dashboard
 WORKDIR /opt
@@ -22,7 +21,7 @@ RUN apk --no-cache add git tzdata ca-certificates && \
     mkdir -p /conf
 
 COPY --from=dashboard /opt/clash-dashboard/dist /clash-dashboard
-COPY --from=builder /clash /
+COPY --from=builder /src/bin/clash-docker /clash
 
 VOLUME ["/conf"]
 ENTRYPOINT ["/clash -d /conf"]
