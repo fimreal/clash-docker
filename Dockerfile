@@ -21,7 +21,7 @@ RUN apk --no-cache add tzdata ca-certificates && \
     mkdir -p /conf
 
 COPY --from=dashboard /opt/clash-dashboard/dist /clash-dashboard
-COPY --from=builder /src/bin/clash-docker /clash
+COPY --from=builder /src/clash/bin/clash-docker /clash
 
 VOLUME ["/conf"]
 ENTRYPOINT ["/clash -d /conf"]
