@@ -1,0 +1,17 @@
+FROM node:14 as dashboard
+WORKDIR /opt
+RUN git clone https://github.com/Dreamacro/clash-dashboard.git &&\
+    cd clash-dashboard &&\
+    npm install &&\
+    npm run build
+
+FROM alpine
+RUN apk --no-cache add tzdata caddy && \
+    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &&\
+    apk del tzdata
+
+COPY --from=dashboard /opt/clash-dashboard/dist /clash-dashboard
+
+VOLUME ["/clash-dashboard"]
+ENTRYPOINT ["caddy","-root","/clash-dashboard"]
+CMD ["-port","80"]
